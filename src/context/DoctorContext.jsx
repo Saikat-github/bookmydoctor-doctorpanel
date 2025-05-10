@@ -28,7 +28,6 @@ const DoctorContextProvider = (props) => {
                 withCredentials: true
             });
             if (data.success) {
-                console.log(data.profileData);
                 setProfileData(data.profileData);
             } else {
                 toast.error(data.message);
