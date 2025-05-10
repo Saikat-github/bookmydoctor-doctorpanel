@@ -28,6 +28,7 @@ const LogoutComponent = ({setIsMobileMenuOpen}) => {
       toast.error(error.message);
     } finally {
       setLoader(false);
+      setIsMobileMenuOpen(false);
     }
   }
   return (
