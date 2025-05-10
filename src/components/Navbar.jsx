@@ -1,16 +1,14 @@
 import React, { useContext, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import Sidebar from './Sidebar';
-import { ChevronDown } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import LogoutComponent from './LogoutComponent';
-import { DoctorContext } from '../context/DoctorContext';
-
+import { useNavigate } from "react-router-dom";
 
 
 
 const Navbar = () => {
     const navigate = useNavigate()
-    const { profileData } = useContext(DoctorContext);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
 
     return (
@@ -22,11 +20,18 @@ const Navbar = () => {
                     </p>
                 </div>
             </div>
+
             <Sidebar />
-            <div className='group cursor-pointer px-2'>
-                <ChevronDown />
-                <LogoutComponent />
-            </div>
+
+            {/* Mobile Menu Toggle */}
+            <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="text-indigo-600 focus:outline-none hover:cursor-pointer"
+            >
+                {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+
+            {isMobileMenuOpen && <LogoutComponent setIsMobileMenuOpen={setIsMobileMenuOpen} />}
         </div>
 
     )

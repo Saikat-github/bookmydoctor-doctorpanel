@@ -22,7 +22,7 @@ const Sidebar = () => {
               }`
             }
           >
-            <Home className="w-6 h-6 text-indigo-600" />
+            <Home className="w-5 h-5 text-indigo-600" />
             <p className="max-sm:text-xs">Home</p>
           </NavLink>
 
