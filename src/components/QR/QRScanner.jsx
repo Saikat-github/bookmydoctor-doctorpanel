@@ -6,9 +6,9 @@ import { Html5QrcodeScanner } from 'html5-qrcode';
 import axios from 'axios';
 import { DoctorContext } from '../../context/DoctorContext';
 import jsQR from 'jsqr';
-import { MinimalLoader } from '../utility components/ElegantLoader';
 import QRResult from './QRResult';
 import { toast } from 'react-toastify';
+import { Loader2 } from 'lucide-react';
 
 
 
@@ -47,10 +47,18 @@ const QRScanner = () => {
     useEffect(() => {
         if (scanMode === 'camera') {
             const scanner = new Html5QrcodeScanner('reader', { qrbox: 250, fps: 5 });
-            scanner.render(processQrCode, () => { });
+
+            const onSuccess = (decodedText) => {
+                scanner.clear(); // Stop further scanning
+                processQrCode(decodedText);
+            };
+
+            scanner.render(onSuccess, () => { });
+
             return () => scanner.clear();
         }
     }, [scanMode]);
+
 
     const handleFileUpload = (e) => {
         if (!profileData) {
@@ -94,11 +102,11 @@ const QRScanner = () => {
 
 
     if (loading) {
-        return <MinimalLoader />
+        return <Loader2 className='w-8 h-8 text-indigo-600 animate-spin mx-auto my-16' />
     }
 
 
-    
+
     return (
         <div className="w-full max-w-md mx-auto p-4">
             {
@@ -107,8 +115,6 @@ const QRScanner = () => {
                     <>
                         <QRResult scanSuccess={scanSuccess} scanError={scanError} patientDetails={patientDetails} />
                         <button onClick={resetScanner} className='flex-1 py-2 px-3 text-sm font-medium my-6 w-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white'>Scan Another</button>
-
-
                     </>
                     :
                     <>

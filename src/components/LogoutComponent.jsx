@@ -32,7 +32,7 @@ const LogoutComponent = ({setIsMobileMenuOpen}) => {
     }
   }
   return (
-    <div className={`absolute top-10 right-2  bg-white shadow-md shadow-slate-500 text-white rounded py-4 px-6 z-10 transition-opacity duration-200 ease-in-out`}>
+    <div className={`absolute top-12 right-2  bg-white shadow-md shadow-slate-500 text-white rounded py-4 px-6 z-10 transition-opacity duration-200 ease-in-out`}>
       {currentDoc
         ?
         <div className="space-y-4 text-slate-800">
