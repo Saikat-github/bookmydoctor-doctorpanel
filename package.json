@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@react-oauth/google": "^0.12.1",
+    "@zxing/browser": "^0.1.5",
     "axios": "^1.7.9",
     "file-saver": "^2.0.5",
     "html-to-image": "^1.11.13",
@@ -18,7 +19,6 @@
     "jspdf": "^3.0.0",
     "jsqr": "^1.4.0",
     "lucide-react": "^0.473.0",
-    "qr-scanner": "^1.4.2",
     "qrcode.react": "^4.2.0",
     "razorpay": "^2.9.6",
     "react": "^18.3.1",
