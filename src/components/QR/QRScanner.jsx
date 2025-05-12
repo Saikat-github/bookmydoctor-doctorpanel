@@ -95,7 +95,7 @@ const QRScanner = () => {
 
 
     const resetScanner = () => {
-        setScanMode('camera');
+        setScanMode('file');
         setScanError('');
         setScanSuccess('');
         setPatientDetails(null);
