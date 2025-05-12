@@ -89,6 +89,7 @@ const QRScanner = () => {
             setScanError(error.message)
             console.log(error)
         } finally {
+            setScanMode('file');
             setLoading(false);
         }
     };
