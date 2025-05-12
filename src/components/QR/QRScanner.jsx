@@ -1,16 +1,11 @@
-
-//Here two scanning functionlities are available - using camera(html5-qrcode) and using file upload(jsqr)
-
 import React, { useState, useRef, useEffect, useCallback, useContext } from 'react';
-import { Html5QrcodeScanner } from 'html5-qrcode';
 import axios from 'axios';
 import { DoctorContext } from '../../context/DoctorContext';
 import jsQR from 'jsqr';
 import QRResult from './QRResult';
 import { toast } from 'react-toastify';
 import { Loader2 } from 'lucide-react';
-
-
+import QrScanner from 'qr-scanner';
 
 const QRScanner = () => {
     const [patientDetails, setPatientDetails] = useState(null);
@@ -19,9 +14,9 @@ const QRScanner = () => {
     const [loading, setLoading] = useState(false);
     const [scanMode, setScanMode] = useState('camera');
 
-
     const { backendUrl, profileData } = useContext(DoctorContext);
     const fileInputRef = useRef(null);
+    const videoRef = useRef(null); // Reference to the video element
 
     const processQrCode = async (decodedText) => {
         if (!profileData) {
@@ -46,19 +41,22 @@ const QRScanner = () => {
 
     useEffect(() => {
         if (scanMode === 'camera') {
-            const scanner = new Html5QrcodeScanner('reader', { qrbox: 250, fps: 5 });
+            // Initialize the QR scanner with video element
+            const qrScanner = new QrScanner(videoRef.current, (result) => {
+                qrScanner.stop(); // Stop scanning after a successful read
+                processQrCode(result.data);
+            });
 
-            const onSuccess = (decodedText) => {
-                scanner.clear(); // Stop further scanning
-                processQrCode(decodedText);
+            qrScanner.start().catch((e) => {
+                console.error('Error starting QR scanner', e);
+                setScanError('Failed to start camera. Please check permissions or try again.');
+            });
+
+            return () => {
+                qrScanner.stop(); // Cleanup scanner on unmount or mode change
             };
-
-            scanner.render(onSuccess, () => { });
-
-            return () => scanner.clear();
         }
     }, [scanMode]);
-
 
     const handleFileUpload = (e) => {
         if (!profileData) {
@@ -93,25 +91,21 @@ const QRScanner = () => {
         }
     };
 
-
     const resetScanner = () => {
         setScanError('');
         setScanSuccess('');
         setPatientDetails(null);
     };
 
-
     if (loading) {
         return <Loader2 className='w-8 h-8 text-indigo-600 animate-spin mx-auto my-16' />
     }
-
-
 
     return (
         <div className="w-full max-w-md mx-auto p-4">
             {
                 (scanError || scanSuccess)
-                    ?
+                    ? 
                     <>
                         <QRResult scanSuccess={scanSuccess} scanError={scanError} patientDetails={patientDetails} />
                         <button onClick={resetScanner} className='flex-1 py-2 px-3 text-sm font-medium my-6 w-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white'>Scan Another</button>
@@ -125,7 +119,11 @@ const QRScanner = () => {
                                 </button>
                             ))}
                         </div>
-                        {scanMode === 'camera' ? <div id="reader" className="w-full"></div> : (
+                        {scanMode === 'camera' ? (
+                            <div className="w-full">
+                                <video ref={videoRef} className="w-full"></video> {/* Using the video element for QR scanning */}
+                            </div>
+                        ) : (
                             <label className="block w-full py-12 border-2 border-dashed border-slate-300 rounded-lg text-center cursor-pointer hover:bg-gray-50">
                                 <span className="text-slate-600 block mb-2">Click to upload QR code image</span>
                                 <input type="file" accept="image/*" className="hidden" onChange={handleFileUpload} ref={fileInputRef} />
