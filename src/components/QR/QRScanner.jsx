@@ -1,11 +1,16 @@
-import React, { useState, useRef, useEffect, useContext } from 'react';
+
+//Here two scanning functionlities are available - using camera(html5-qrcode) and using file upload(jsqr)
+
+import React, { useState, useRef, useEffect, useCallback, useContext } from 'react';
+import { Html5QrcodeScanner } from 'html5-qrcode';
 import axios from 'axios';
 import { DoctorContext } from '../../context/DoctorContext';
 import jsQR from 'jsqr';
 import QRResult from './QRResult';
 import { toast } from 'react-toastify';
 import { Loader2 } from 'lucide-react';
-import { BrowserQRCodeReader } from '@zxing/browser';
+
+
 
 const QRScanner = () => {
     const [patientDetails, setPatientDetails] = useState(null);
@@ -14,14 +19,13 @@ const QRScanner = () => {
     const [loading, setLoading] = useState(false);
     const [scanMode, setScanMode] = useState('camera');
 
+
     const { backendUrl, profileData } = useContext(DoctorContext);
     const fileInputRef = useRef(null);
-    const videoRef = useRef(null);
-    const codeReaderRef = useRef(null); // to keep reference to zxing scanner
 
     const processQrCode = async (decodedText) => {
         if (!profileData) {
-            return toast.info("Please complete your profile on profile page");
+            return toast.info("Please complete your profile on profile page")
         }
         setLoading(true);
         try {
@@ -42,29 +46,23 @@ const QRScanner = () => {
 
     useEffect(() => {
         if (scanMode === 'camera') {
-            const codeReader = new BrowserQRCodeReader();
-            codeReaderRef.current = codeReader;
+            const scanner = new Html5QrcodeScanner('reader', { qrbox: 250, fps: 5 });
 
-            codeReader.decodeFromVideoDevice(null, videoRef.current, (result, err) => {
-                if (result) {
-                    codeReader.reset(); // stop scanning after first successful scan
-                    processQrCode(result.getText());
-                }
-                // silently ignore errors like NotFoundException (no QR in frame)
-            }).catch((err) => {
-                console.error('Camera init error:', err);
-                setScanError('Camera error. Please check permissions or try again.');
-            });
-
-            return () => {
-                codeReader.reset(); // clean up scanner
+            const onSuccess = (decodedText) => {
+                scanner.clear(); // Stop further scanning
+                processQrCode(decodedText);
             };
+
+            scanner.render(onSuccess, () => { });
+
+            return () => scanner.clear();
         }
     }, [scanMode]);
 
+
     const handleFileUpload = (e) => {
         if (!profileData) {
-            return toast.info("Please complete your profile on profile page");
+            return toast.info("Please complete your profile on profile page")
         }
         try {
             const file = e.target.files[0];
@@ -88,12 +86,13 @@ const QRScanner = () => {
             };
             reader.readAsDataURL(file);
         } catch (error) {
-            setScanError(error.message);
-            console.log(error);
+            setScanError(error.message)
+            console.log(error)
         } finally {
             setLoading(false);
         }
     };
+
 
     const resetScanner = () => {
         setScanError('');
@@ -101,15 +100,18 @@ const QRScanner = () => {
         setPatientDetails(null);
     };
 
+
     if (loading) {
-        return <Loader2 className='w-8 h-8 text-indigo-600 animate-spin mx-auto my-16' />;
+        return <Loader2 className='w-8 h-8 text-indigo-600 animate-spin mx-auto my-16' />
     }
+
+
 
     return (
         <div className="w-full max-w-md mx-auto p-4">
             {
                 (scanError || scanSuccess)
-                    ? 
+                    ?
                     <>
                         <QRResult scanSuccess={scanSuccess} scanError={scanError} patientDetails={patientDetails} />
                         <button onClick={resetScanner} className='flex-1 py-2 px-3 text-sm font-medium my-6 w-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white'>Scan Another</button>
@@ -123,11 +125,7 @@ const QRScanner = () => {
                                 </button>
                             ))}
                         </div>
-                        {scanMode === 'camera' ? (
-                            <div className="w-full">
-                                <video ref={videoRef} className="w-full"></video>
-                            </div>
-                        ) : (
+                        {scanMode === 'camera' ? <div id="reader" className="w-full"></div> : (
                             <label className="block w-full py-12 border-2 border-dashed border-slate-300 rounded-lg text-center cursor-pointer hover:bg-gray-50">
                                 <span className="text-slate-600 block mb-2">Click to upload QR code image</span>
                                 <input type="file" accept="image/*" className="hidden" onChange={handleFileUpload} ref={fileInputRef} />
