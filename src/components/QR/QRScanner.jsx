@@ -89,13 +89,13 @@ const QRScanner = () => {
             setScanError(error.message)
             console.log(error)
         } finally {
-            setScanMode('file');
             setLoading(false);
         }
     };
 
 
     const resetScanner = () => {
+        setScanMode('file');
         setScanError('');
         setScanSuccess('');
         setPatientDetails(null);
