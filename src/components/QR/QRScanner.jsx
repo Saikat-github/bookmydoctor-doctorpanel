@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect, useCallback, useContext } from 'react';
+import QrScanner from 'qr-scanner';
 import axios from 'axios';
 import { DoctorContext } from '../../context/DoctorContext';
 import jsQR from 'jsqr';
 import QRResult from './QRResult';
 import { toast } from 'react-toastify';
 import { Loader2 } from 'lucide-react';
-import QrScanner from 'qr-scanner';
 
 const QRScanner = () => {
     const [patientDetails, setPatientDetails] = useState(null);
@@ -16,7 +16,6 @@ const QRScanner = () => {
 
     const { backendUrl, profileData } = useContext(DoctorContext);
     const fileInputRef = useRef(null);
-    const videoRef = useRef(null); // Reference to the video element
 
     const processQrCode = async (decodedText) => {
         if (!profileData) {
@@ -41,19 +40,41 @@ const QRScanner = () => {
 
     useEffect(() => {
         if (scanMode === 'camera') {
-            // Initialize the QR scanner with video element
-            const qrScanner = new QrScanner(videoRef.current, (result) => {
-                qrScanner.stop(); // Stop scanning after a successful read
-                processQrCode(result.data);
+            // Get the reader container and create a video element to attach to it.
+            const readerContainer = document.getElementById('reader');
+            // Clear any previous children in case of a mode change.
+            readerContainer.innerHTML = '';
+
+            const videoElem = document.createElement('video');
+            videoElem.setAttribute('playsinline', true); // Required to run in iOS safari
+            videoElem.style.width = "100%";
+            readerContainer.appendChild(videoElem);
+
+            // Initialize and start the qr-scanner.
+            const qrScanner = new QrScanner(videoElem, result => {
+                // Stop further scanning when a result is found.
+                qrScanner.stop();
+                processQrCode(result);
+            }, {
+                // You can adjust additional options here if needed.
+                /* Example:
+                highlightScanRegion: true,
+                highlightCodeOutline: true,
+                */
+            });
+            
+            qrScanner.start().catch(err => {
+                setScanError("Camera could not be started. Please check camera permissions and try again.");
+                console.error(err);
             });
 
-            qrScanner.start().catch((e) => {
-                console.error('Error starting QR scanner', e);
-                setScanError('Failed to start camera. Please check permissions or try again.');
-            });
-
+            // Cleanup on unmount or when scanMode changes.
             return () => {
-                qrScanner.stop(); // Cleanup scanner on unmount or mode change
+                qrScanner.stop();
+                // Optionally, remove the video element from the DOM.
+                if (readerContainer.contains(videoElem)) {
+                    readerContainer.removeChild(videoElem);
+                }
             };
         }
     }, [scanMode]);
@@ -105,7 +126,7 @@ const QRScanner = () => {
         <div className="w-full max-w-md mx-auto p-4">
             {
                 (scanError || scanSuccess)
-                    ? 
+                    ?
                     <>
                         <QRResult scanSuccess={scanSuccess} scanError={scanError} patientDetails={patientDetails} />
                         <button onClick={resetScanner} className='flex-1 py-2 px-3 text-sm font-medium my-6 w-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white'>Scan Another</button>
@@ -119,11 +140,7 @@ const QRScanner = () => {
                                 </button>
                             ))}
                         </div>
-                        {scanMode === 'camera' ? (
-                            <div className="w-full">
-                                <video ref={videoRef} className="w-full"></video> {/* Using the video element for QR scanning */}
-                            </div>
-                        ) : (
+                        {scanMode === 'camera' ? <div id="reader" className="w-full"></div> : (
                             <label className="block w-full py-12 border-2 border-dashed border-slate-300 rounded-lg text-center cursor-pointer hover:bg-gray-50">
                                 <span className="text-slate-600 block mb-2">Click to upload QR code image</span>
                                 <input type="file" accept="image/*" className="hidden" onChange={handleFileUpload} ref={fileInputRef} />
