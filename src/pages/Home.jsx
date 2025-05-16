@@ -1,13 +1,9 @@
-import React, { useContext } from 'react'
-import { DoctorContext } from '../context/DoctorContext'
 import { useNavigate } from 'react-router-dom'
-import Login from './Login';
 import { CalendarCheck, BarChart3, Headset } from 'lucide-react';
 
 
 
 const Home = () => {
-  const { currentDoc } = useContext(DoctorContext);
 
   const navigate = useNavigate();
   return (

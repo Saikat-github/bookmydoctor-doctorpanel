@@ -1,10 +1,11 @@
-import React, { useContext, useRef, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 import { QRCodeSVG } from "qrcode.react";
 import { assets } from "../assets/assets.js"
 import { toast } from 'react-toastify';
 import { toPng } from 'html-to-image';
 import { DoctorContext } from '../context/DoctorContext.jsx';
 import { Download} from 'lucide-react';
+import { useCallback } from 'react';
 
 const QRDownload = ({ title = "Scan & Book Appointment", logo = assets.reactIcon, size = 200 }) => {
     const [loader, setLoader] = useState(false);
@@ -13,10 +14,7 @@ const QRDownload = ({ title = "Scan & Book Appointment", logo = assets.reactIcon
     const componentRef = useRef(null);
     const bookingUrl = `${userPanelUrl}/appointments/${profileData?._id}`
 
-
-
-    // Function to download as high-quality PNG image
-    const downloadAsImage = async () => {
+    const downloadAsImage = useCallback(async () => {
         if (!profileData) {
             return toast.info("Please complete your profile on profile page")
         }
@@ -61,9 +59,7 @@ const QRDownload = ({ title = "Scan & Book Appointment", logo = assets.reactIcon
         } finally {
             setLoader(false);
         }
-    };
-
-
+    }, [profileData])
     
 
     return (

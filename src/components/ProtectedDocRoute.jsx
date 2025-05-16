@@ -8,7 +8,7 @@ import { useState, useEffect } from 'react';
 const ProtectedDocRoute = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [loading, setLoading] = useState(true);
-  const {checkAuthStatus, currentDoc} = useContext(DoctorContext);
+  const { checkAuthStatus } = useContext(DoctorContext);
 
   useEffect(() => {
     const verifyAuth = async () => {

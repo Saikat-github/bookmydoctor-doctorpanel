@@ -1,18 +1,17 @@
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext, useState } from 'react'
 import { DoctorContext } from '../../context/DoctorContext'
 import Form from '../../components/Form';
 import { DoctorProfileCard } from '../../components';
-import { MinimalLoader } from '../../components/utility components/ElegantLoader';
-
+import {Loader2} from 'lucide-react'
 
 
 const Details = () => {
   const [isEdit, setIsEdit] = useState(false);
 
-  const { currentDoc, profileData, loader } = useContext(DoctorContext);
+  const { profileData, loader } = useContext(DoctorContext);
 
   if (loader) {
-    return <MinimalLoader />
+    return <Loader2 className="w-8 h-8 animate-spin text-indigo-600 mx-auto" />
   }
 
   

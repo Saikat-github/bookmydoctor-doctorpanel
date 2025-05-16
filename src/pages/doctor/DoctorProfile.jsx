@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import { useContext } from 'react'
 import AddDoctor from './AddDoctor'
 import Details from './Details'
 import { DoctorContext } from '../../context/DoctorContext'

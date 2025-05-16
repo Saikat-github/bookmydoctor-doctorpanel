@@ -1,10 +1,10 @@
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { DoctorContext } from '../../context/DoctorContext.jsx';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { BadgeCheck, XCircle, Info } from "lucide-react";
-import { MinimalLoader } from '../../components/utility components/ElegantLoader.jsx';
+import { BadgeCheck, XCircle, Info, Loader2 } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
+
 
 const Payments = () => {
     const [cursor, setCursor] = useState(null);
@@ -103,8 +103,8 @@ const Payments = () => {
                     </div>
                 ))}
             </div>
-            {loader && <MinimalLoader />}
-            {hasNextPage && (
+            {loader && <Loader2 className="w-8 h-8 animate-spin mx-auto my-10 text-indigo-600"/>}
+            {hasNextPage && payments.length>0 && (
                 <button
                     onClick={fetchPayments}
                     className="block mx-auto mt-4 px-4 py-2 bg-indigo-600 text-white rounded-lg shadow-md hover:bg-indigo-700 transition"

@@ -1,14 +1,11 @@
-import React, { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Signup, Login as LoginComponent } from '../components'
-import { DoctorContext } from '../context/DoctorContext'
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import axios from 'axios';
+
 
 const Login = () => {
     const [state, setState] = useState('Login');
-    const { currentDoc, backendUrl } = useContext(DoctorContext);
-    const navigate = useNavigate()
     const location = useLocation();
 
 

@@ -1,16 +1,17 @@
-import React, { useContext, useState, useEffect } from 'react'
+import React, { useContext, useState, useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import 'react-toastify/dist/ReactToastify.css';
 import { toast } from 'react-toastify';
 import axios from 'axios'
-import DaySlotWithTimeSlots from './dayslots/DaySlotWithTimeslots';
-import Input from './form elements/Input';
-import Select from './form elements/Select';
 import { DoctorContext } from '../context/DoctorContext';
 import { isEmptyObject } from '../utils/util1';
-import { X } from 'lucide-react';
-import { assets, doctorSpecialities } from '../assets/assets';
+import { X, Loader2 } from 'lucide-react';
+import { assets } from '../assets/assets';
 import DeleteAccount from "./DeleteAccount";
+import FormPersonalInfo from './form elements/FormPersonalInfo';
+import FormClinicInfo from './form elements/FormClinicInfo';
+import FormProfessionalInfo from './form elements/FormProfessionalInfo';
+import { useCallback } from 'react';
 
 
 
@@ -20,6 +21,12 @@ const Form = ({ isEdit, setIsEdit = () => { }, profileData }) => {
   const { backendUrl, getProfileData, checkAuthStatus, timeSlotsByDay, setTimeSlotsByDay } = useContext(DoctorContext);
 
   const { register, handleSubmit, reset, formState: { isSubmitting, errors } } = useForm();
+
+  const previewUrl = useMemo(() => {
+    return docImg
+      ? URL.createObjectURL(docImg)
+      : (profileData?.personalInfo?.image || assets.upload_area);
+  }, [docImg, profileData?.personalInfo?.image]);
 
 
   useEffect(() => {
@@ -59,9 +66,17 @@ const Form = ({ isEdit, setIsEdit = () => { }, profileData }) => {
   }, [profileData, reset]);
 
 
+  const resetForm = useCallback(() => {
+    reset();
+    setDocImg(null);
+    setTimeSlotsByDay({});
+    if (typeof setIsEdit === 'function') {
+      setIsEdit(false);
+    }
+  }, [reset, setIsEdit, setTimeSlotsByDay]);
 
 
-  const onsubmit = async (data) => {
+  const onsubmit = useCallback(async (data) => {
     try {
       // Early validation checks
       const validationErrors = {
@@ -118,18 +133,7 @@ const Form = ({ isEdit, setIsEdit = () => { }, profileData }) => {
       toast.error(error.message);
       console.error("Error:", error);
     }
-  };
-
-  // Helper function to reset form state
-  const resetForm = () => {
-    // reset(); // Uncomment if using react-hook-form
-    setDocImg(null);
-    setTimeSlotsByDay({});
-    if (typeof setIsEdit === 'function') {
-      setIsEdit(false);
-    }
-  };
-
+  }, [docImg, profileData, timeSlotsByDay])
 
 
 
@@ -149,154 +153,23 @@ const Form = ({ isEdit, setIsEdit = () => { }, profileData }) => {
         </div>
         <div className='flex gap-4 items-center'>
           <label htmlFor="doc-img">
-            <img src={docImg ? URL.createObjectURL(docImg) : (profileData?.personalInfo?.image || assets.upload_area)} className='w-20 rounded-full bg-gray-100 cursor-pointer' />
+            <img src={previewUrl} className='w-20 rounded-full bg-gray-100 cursor-pointer' />
           </label>
           <input {...register("image")} type="file" id='doc-img' onChange={(e) => setDocImg(e.target.files[0])} hidden />
           <p>Upload Your <br />Picture<span className='text-red-600'>*</span></p>
         </div>
 
 
-
-
         {/* Left Section*/}
         <div className='flex flex-col gap-4'>
-          <p className='text-xl font-medium text-slate-700 '>Personal Info</p>
-
-          <Input type="text" placeholder="Your Name" label="Enter Your Name" {...register("name")} required
-          />
-
-          <Input type="email" placeholder="Your Email" label="Email" {...register("email")} required
-          />
-
-          <Input type="date" placeholder="dd-mm-yyyy" label="Date of Birth" {...register("dob")} required
-          />
-
-          <Input type="text" placeholder="Select Languages" label="Languages Spoken" {...register("language")}
-          />
-
-
-
-
-
-
-          <p className='text-xl font-medium text-slate-700'>Clinic Info</p>
-
-          <textarea type="text" placeholder="Detailed address" className={`py-2 px-3 border border-gray-700 w-full  rounded-sm mt-2`} label="Clinic Address" {...register("clinicAddress")} required
-          ></textarea>
-
-          <Input
-            type="text"
-            label="City/Town (Not from any city/town, please enter your nearest city/town)"
-            placeholder="Enter city or town name"
-            {...register("city")}
-            required
-          />
-
-          <Input
-            type="text"
-            label="Clinic Pincode"
-            placeholder="Enter PIN Code"
-            {...register("pincode", {
-              pattern: {
-                value: /^[1-9][0-9]{5}$/,
-                message: "Invalid pincode. Must be 6 digits and not start with 0.",
-              },
-            })}
-            required
-          />
-          {errors.pincode && <p className="text-red-600 text-xs">{errors.pincode.message}</p>}
-
-          <Input type="number" placeholder="Clinic Phone Number" label="Enter Ph Number" {...register("clinicPh", {
-            required: "Phone number is required",
-            pattern: {
-              value: /^[6-9]\d{9}$/,
-              message: "Enter a valid 10-digit mobile number starting with 6-9"
-            }
-          })} required
-          />
-          {errors.clinicPh && <p className="text-red-600 text-xs">{errors.clinicPh.message}</p>}
-
-          <Input type="number" placeholder="In Minutes" label="Approximate CheckUp Time" {...register("avgCheckTime", {
-            required: "Check-up time is required",
-            min: { value: 1, message: "Check-up time must be greater than 0" }
-          })} required
-          />
-          {errors.avgCheckTime && <p className="text-red-600 text-xs">{errors.avgCheckTime.message}</p>}
-
-          <Input type="number" placeholder="Your Fees" label="Visiting Fees" {...register("fees", {
-            required: "Fees are required",
-            min: { value: 1, message: "Fees must be greater than 0" }
-          })} required
-          />
-          {errors.fees && <p className="text-red-600 text-xs">{errors.fees.message}</p>}
-
-          <Input type="number" placeholder="To avoid over booking" label="Max Daily Appointments" {...register("maxAppointment", {
-            required: "Max daily appointments are required",
-            min: { value: 1, message: "Minimum value is 1" },
-            max: { value: 100, message: "Maximum value is 100" }
-          })} required
-          />
-          {errors.maxAppointment && <p className="text-red-600 text-xs">{errors.maxAppointment.message}</p>}
-
-          <div className='w-full'>
-            <p>Available Days
-              <span className="text-red-600">*</span>
-              <br />(You can change your availability status anytime, after submitting this form)
-            </p>
-            <DaySlotWithTimeSlots />
-          </div>
+          <FormPersonalInfo register={register} errors={errors} />
+          <FormClinicInfo register={register} errors={errors} />
         </div>
-
-
-
-
-
-
-
 
         {/* Right Section */}
         <div className='flex flex-col gap-4'>
-
-          <p className='text-xl font-medium text-slate-700'>Professional Info</p>
-
-          <Input type="text" placeholder="Degree" label="Degree" {...register("degree")} required
-          />
-          {errors.degree && <p className="text-red-600 text-xs">{errors.degree.message}</p>}
-
-          <Input type="text" placeholder="In Years" label="Experience" {...register("experience", {
-            required: "Experience is required",
-            min: { value: 0, message: "Experience must be a positive number" }
-          })} required
-          />
-          {errors.experience && <p className="text-red-600 text-xs">{errors.experience.message}</p>}
-
-          <Select placeholder="Please select your speciality" options={doctorSpecialities} label="Speciality" {...register("speciality")} required
-          />
-
-          <Input type="text" placeholder="Registration Number" label="Medical Registration Number" {...register("regNumber", {
-            minLength: { value: 5, message: "Registration number must be at least 5 characters" }
-          })}
-          />
-          {errors.regNumber && <p className="text-red-600 text-xs">{errors.regNumber.message}</p>}
-
-          <Input type="file" label="Medical License Document/Certificate" {...register("licenseDocument")} required
-          />
-
-          <div>
-            <p>Write something about you</p>
-            <textarea rows={6} className='py-2 px-3 border border-gray-700 rounded-sm w-full mt-2' placeholder='Write about doctor' {...register("about", {
-              maxLength: {
-                value: 500, // character limit, not word limit
-                message: "Maximum 300 characters or approx. 50 words.",
-              },
-            })}></textarea>
-            {errors.about && <p className="text-red-600 text-xs">{errors.about.message}</p>}
-          </div>
-
+          <FormProfessionalInfo register={register} errors={errors} />
         </div>
-
-
-
 
         {/* Terms and Condition */}
         <div className=' flex items-center gap-1'>
@@ -311,13 +184,15 @@ const Form = ({ isEdit, setIsEdit = () => { }, profileData }) => {
               className="text-blue-500 underline cursor-pointer">Privacy Policy
             </a> of bookmydoctor
           </p>
-
         </div>
 
-
-
         {/* Button */}
-        <button type='submit' disabled={isSubmitting} className={`mt-2 py-2 px-10 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-full w-36 transition-all duration-300`}>{isSubmitting ? <div className='border-2 border-white w-4 h-4 animate-spin rounded-full border-t-transparent'></div> : (profileData ? "Edit" : "Submit")}</button>
+        <button type='submit' disabled={isSubmitting} className={`mt-2 py-2 px-10 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-full w-36 transition-all duration-300`}>
+          {isSubmitting ?
+            <Loader2 className="w-4 animate-spin" />
+            :
+            (profileData ? "Edit" : "Submit")}
+        </button>
         {
           profileData
           &&
@@ -329,7 +204,9 @@ const Form = ({ isEdit, setIsEdit = () => { }, profileData }) => {
           </p>
         }
       </form>
-      <DeleteAccount checkAuthStatus={checkAuthStatus} backendUrl={backendUrl}/>
+
+
+      <DeleteAccount checkAuthStatus={checkAuthStatus} backendUrl={backendUrl} />
     </div>
   )
 }

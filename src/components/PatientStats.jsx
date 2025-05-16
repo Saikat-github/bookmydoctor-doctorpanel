@@ -1,6 +1,4 @@
-import React from 'react'
 import { FaMale, FaFemale, FaGenderless } from "react-icons/fa";
-
 
 
 const PatientStats = ({ stats }) => {

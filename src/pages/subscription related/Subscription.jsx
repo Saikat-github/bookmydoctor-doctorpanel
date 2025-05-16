@@ -1,6 +1,6 @@
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import { DoctorContext } from '../../context/DoctorContext.jsx';
-import { Plans, SubscriptionStat } from '../../components/index.js';
+import { SubscriptionStat } from '../../components/index.js';
 import { useNavigate } from 'react-router-dom';
 
 

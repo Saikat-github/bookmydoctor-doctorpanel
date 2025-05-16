@@ -3,7 +3,7 @@ import { DoctorContext } from "../../context/DoctorContext";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { PatientStats } from "../../components";
-import { MinimalLoader } from "../../components/utility components/ElegantLoader";
+import { Loader2 } from 'lucide-react'
 import { getStartEndDate } from "../../utils/ConverDate";
 
 const DoctorDashboard = () => {
@@ -79,7 +79,7 @@ const DoctorDashboard = () => {
       {loading
         ?
         (
-          <MinimalLoader />
+          <Loader2 className="w-8 h-8 animate-spin text-indigo-600 mx-auto" />
         )
         :
         (

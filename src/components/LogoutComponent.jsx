@@ -31,6 +31,8 @@ const LogoutComponent = ({setIsMobileMenuOpen}) => {
       setIsMobileMenuOpen(false);
     }
   }
+
+  
   return (
     <div className={`absolute top-12 right-2  bg-white shadow-md shadow-slate-500 text-white rounded py-4 px-6 z-10 transition-opacity duration-200 ease-in-out`}>
       {currentDoc

@@ -71,7 +71,7 @@ const Signup = ({ setState }) => {
                 toast.error(response.data.errors ? response.data.errors[0].msg : response.data.message);
             }
         } catch (error) {
-            toast.error(error.response?.data?.message || "An error occurred");
+            toast.error(error.response?.data?.message || "Something went wrong");
             console.error("Error:", error);
         } finally {
             setLoader(false);

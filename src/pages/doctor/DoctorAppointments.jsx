@@ -1,11 +1,10 @@
-import React, { useContext, useEffect } from 'react'
+import { useContext } from 'react'
 import { DoctorContext } from '../../context/DoctorContext'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import SingleAppointment from '../../components/SingleAppointment';
 import { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 
 
 
@@ -13,7 +12,6 @@ const DoctorAppointments = () => {
   const { register, handleSubmit } = useForm()
   const [loader, setLoader] = useState(false);
   const { backendUrl, appointments, setAppointments, profileData } = useContext(DoctorContext);
-  const navigate = useNavigate();
 
 
   const getAppointments = async (data) => {

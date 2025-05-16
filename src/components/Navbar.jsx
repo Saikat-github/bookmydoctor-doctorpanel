@@ -5,7 +5,6 @@ import LogoutComponent from './LogoutComponent';
 import { useNavigate } from "react-router-dom";
 
 
-
 const Navbar = () => {
     const navigate = useNavigate()
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);

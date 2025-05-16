@@ -1,8 +1,5 @@
 import React from 'react';
 
-const DaySelector = ({ selectedDays, handleDayChange}) => {
-  const [isOpen, setIsOpen] = React.useState(false);
-
   const days = [
     "Monday",
     "Tuesday",
@@ -13,13 +10,10 @@ const DaySelector = ({ selectedDays, handleDayChange}) => {
     "Sunday",
   ];
 
-  // const toggleDay = (day) => {
-  //   if (selectedDays.includes(day)) {
-  //     onChange(selectedDays.filter(d => d !== day));
-  //   } else {
-  //     onChange([...selectedDays, day]);
-  //   }
-  // };
+
+const DaySelector = ({ selectedDays, handleDayChange}) => {
+  const [isOpen, setIsOpen] = React.useState(false);
+
 
   return (
     <div className="relative w-full">

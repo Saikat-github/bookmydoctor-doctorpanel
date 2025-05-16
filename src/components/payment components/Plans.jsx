@@ -3,7 +3,7 @@ import { useContext, useState } from 'react';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import { DoctorContext } from '../../context/DoctorContext';
-import { MinimalLoader } from '../utility components/ElegantLoader';
+import { Loader2 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom';
 
 
@@ -105,8 +105,9 @@ const Plans = () => {
 
 
     if (loader) {
-        return <MinimalLoader />;
+        return <Loader2 className="w-8 h-8 animate-spin mx-auto my-10 text-indigo-600"/>;
     }
+
     return (
         <div className="flex flex-col items-center min-h-screen mt-4 gap-4 mx-2">
 
@@ -157,7 +158,7 @@ const Plans = () => {
                     {paymentLoader ? (
                         <>
                             Loading
-                            <div className="ml-2 h-4 w-4 border-2 border-t-slate-200 border-b-slate-200 border-slate-600 rounded-full animate-spin" />
+                            <Loader2 className='w-4 animate-spin text-white ml-2' />
                         </>
                     ) : (
                         "Upgrade Now"

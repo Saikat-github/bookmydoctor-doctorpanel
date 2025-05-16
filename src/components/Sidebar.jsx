@@ -1,11 +1,10 @@
-import React, { useContext, useState } from 'react'
-import { assets } from '../assets/assets';
+import { useContext} from 'react'
 import { NavLink } from 'react-router-dom';
 import { DoctorContext } from '../context/DoctorContext';
 import {Home, QrCode} from 'lucide-react';
 
 const Sidebar = () => {
-  const { backendUrl, currentDoc, setCurrentDoc, profileData } = useContext(DoctorContext);
+  const { currentDoc } = useContext(DoctorContext);
 
 
   return (
