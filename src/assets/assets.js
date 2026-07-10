@@ -22,6 +22,7 @@ import crossIcon from './circle-xmark-regular.svg'
 import diamond from './gem-regular.svg'
 import dollar from './dollar-sign-solid.svg'
 import creditCard from './credit-card-solid.svg'
+import bmdLogo from "./bmdlogo-2.png"
 
 
 
@@ -49,7 +50,8 @@ export const assets = {
     crossIcon,
     diamond,
     dollar,
-    creditCard
+    creditCard,
+    bmdLogo
 }
 
 

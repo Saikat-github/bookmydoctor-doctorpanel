@@ -19,7 +19,7 @@ const Home = () => {
             See Patients Stats
           </button>
 
-          <a href='#footer' className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-gradient-to-r from-pink-500 to-rose-600 text-white font-semibold shadow-lg hover:from-pink-600 hover:to-rose-700 transition-all duration-300 hover:scale-110">
+          <a href='#footer' className="flex items-center gap-4 px-6 py-3 rounded-2xl bg-gradient-to-r from-pink-500 to-rose-600 text-white font-semibold shadow-lg hover:from-pink-600 hover:to-rose-700 transition-all duration-300 hover:scale-110">
             <Headset className="w-10 h-10" />
             Contact Support
           </a>

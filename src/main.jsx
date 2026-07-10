@@ -4,10 +4,10 @@ import './index.css'
 import App from './App.jsx'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import DoctorContextProvider from './context/DoctorContext.jsx'
-import { DoctorAppointments, DoctorDashboard, DoctorProfile, Login, ForgetPassword, QRDownload, Subscription, Payments, NotFound } from './pages/index.js'
+import { DoctorAppointments, DoctorDashboard, DoctorProfile, LoginPage, ForgetPassword, DoctorQR, Subscription, Payments, NotFound, Plans, QRScanner } from './pages/index.js'
 import Home from './pages/Home.jsx'
-import ProtectedDocRoute from './components/ProtectedDocRoute.jsx'
-import { Plans, QRScanner } from './components/index.js'
+import ProtectedDocRoute from './components/utils/ProtectedDocRoute.jsx'
+
 
 
 const router = createBrowserRouter([
@@ -50,7 +50,25 @@ const router = createBrowserRouter([
       {
         path: "/qr-download",
         element: <ProtectedDocRoute>
-          <QRDownload />
+          <DoctorQR />
+        </ProtectedDocRoute>
+      },
+      {
+        path: "/subscription-details",
+        element: <ProtectedDocRoute>
+          <Subscription />
+        </ProtectedDocRoute>
+      },
+      {
+        path: "/payments",
+        element: <ProtectedDocRoute>
+          <Payments />
+        </ProtectedDocRoute>
+      },
+      {
+        path: "/checkout",
+        element: <ProtectedDocRoute>
+          <Plans />
         </ProtectedDocRoute>
       },
 
@@ -61,24 +79,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/login",
-        element: <Login />
-      }, 
-      {
-        path: "/subscription-details",
-        element: <ProtectedDocRoute>
-          <Subscription />
-        </ProtectedDocRoute>
-      },
-      {
-        path: "/payments",
-        element: <ProtectedDocRoute>
-        <Payments />
-      </ProtectedDocRoute>
-      },
-      {
-        path: "/checkout",
-        element: 
-          <Plans />
+        element: <LoginPage />
       },
       {
         path: "*",
@@ -91,7 +92,7 @@ const router = createBrowserRouter([
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <DoctorContextProvider>
-        <RouterProvider router={router} />
+      <RouterProvider router={router} />
     </DoctorContextProvider>
   </StrictMode>,
 )

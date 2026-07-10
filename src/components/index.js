@@ -1,52 +1,65 @@
-import ConfirmationModal from "./utility components/ConfirmationModal";
-import Form from "./Form";
-import Navbar from "./Navbar";
-import ProtectedDocRoute from "./ProtectedDocRoute";
-import Sidebar from "./Sidebar";
-import StarryNight from "./utility components/StarryNight";
+import Signup from "./auth/Signup";
+import Login from "./auth/Login";
+import LogoutComponent from "./auth/LogoutComponent";
+
 import DaySelector from "./dayslots/DaySelector";
 import TimeSlotSelector from "./dayslots/TimeSlotSelector";
 import DaySlotWithTimeSlots from "./dayslots/DaySlotWithTimeslots";
-import Input from "./form elements/Input";
-import Button from "./form elements/Button";
-import Select from "./form elements/Select";
-import DoctorProfileCard from "./DoctorProfileCard";
-import SingleAppointment from "./SingleAppointment";
-import LogoutComponent from "./LogoutComponent";
-import PatientStats from "./PatientStats";
-import Footer from "./Footer";
-import QRScanner from "./QR/QRScanner";
-import Plans from "./payment components/Plans";
-import SubscriptionStat from "./payment components/SubscriptionStat";
-import ScrollToTop from "./ScrollToTop";
-import Signup from "./auth/Signup";
-import Login from "./auth/Login";
+
+import Appointment from "./doc-patient/Appointment";
+import PatientStats from "./doc-patient/PatientStats";
+
+import DeleteAccount from "./doc-profile/DeleteButtons";
+import ProfileCard from "./doc-profile/ProfileCard";
+import ProfileDetails from "./doc-profile/ProfileDetails";
+
+import Navbar from "./nav-foot/Navbar";
+import Sidebar from "./nav-foot/Sidebar";
+import Footer from "./nav-foot/Footer";
+
+import PlansComponent from "./payment/PlansComponent";
+import SubscriptionStat from "./payment/SubscriptionStat";
+
+import Form from "./profile-form/Form";
+import Input from "./profile-form/Input";
+import Button from "./profile-form/Button";
+import Select from "./profile-form/Select";
+import QRResult from "./qr/QRResult";
+
+import ConfirmationModal from "./utils/ConfirmationModal";
+import ProtectedDocRoute from "./utils/ProtectedDocRoute";
+import ScrollToTop from "./utils/ScrollToTop";
+
+
+
 
 
 
 
 
 export {
-    ConfirmationModal, 
-    Form, 
-    Navbar, 
-    ProtectedDocRoute, Sidebar, 
-    StarryNight,
-    DaySelector, 
-    TimeSlotSelector, 
-    DaySlotWithTimeSlots, 
-    Input, 
-    Button, 
-    Select, 
-    DoctorProfileCard, 
-    SingleAppointment, 
-    QRScanner, 
-    LogoutComponent, 
-    PatientStats, 
-    Footer,
-    Plans,
-    SubscriptionStat,
-    ScrollToTop,
+    Login,
     Signup,
-    Login
+    LogoutComponent,
+    DaySelector,
+    TimeSlotSelector,
+    DaySlotWithTimeSlots,
+    Appointment,
+    PatientStats,
+    DeleteAccount,
+    ProfileCard,
+    ProfileDetails,
+    Navbar,
+    Footer,
+    Sidebar,
+    PlansComponent,
+    SubscriptionStat,
+    Form,
+    Input,
+    Button,
+    Select,
+    QRResult,
+    ConfirmationModal,
+    ProtectedDocRoute,
+    ScrollToTop,
 };

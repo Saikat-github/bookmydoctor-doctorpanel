@@ -1,15 +1,28 @@
-import Login from "./Login";
-import DoctorAppointments from "./doctor/DoctorAppointments";
-import DoctorDashboard from "./doctor/DoctorDashboard";
-import DoctorProfile from "./doctor/DoctorProfile";
-import AddDoctor from "./doctor/AddDoctor";
-import ForgetPassword from "./ForgetPassword";
-import QRDownload from "./QRDownload";
-import Subscription from "./subscription related/Subscription";
-import Payments from "./subscription related/Payments";
+import LoginPage from "./doc-auth/LoginPage";
+import ForgetPassword from "./doc-auth/ForgetPassword";
+import DoctorAppointments from "./doc-profile/DoctorAppointments";
+import DoctorDashboard from "./doc-profile/DoctorDashboard";
+import DoctorProfile from "./doc-profile/DoctorProfile";
+import DoctorQR from "./doc-profile/DoctorQR";
+import Subscription from "./doc-subscription/Subscription";
+import Payments from "./doc-subscription/Payments";
 import NotFound from "./NotFound";
+import Plans from "./doc-subscription/Plans";
+import QRScanner from "./qr/QRScanner";
 
 
 
 
-export {Login, DoctorAppointments, DoctorDashboard, DoctorProfile, AddDoctor, ForgetPassword, QRDownload, Subscription, Payments, NotFound};
+export {
+    LoginPage,
+    DoctorAppointments,
+    DoctorDashboard,
+    DoctorProfile,
+    ForgetPassword,
+    DoctorQR,
+    Subscription,
+    Payments,
+    NotFound,
+    Plans,
+    QRScanner
+};

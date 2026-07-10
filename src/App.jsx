@@ -3,7 +3,7 @@ import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { Outlet } from 'react-router-dom'
 import { Footer, Navbar, ScrollToTop } from './components'
-
+import { Toaster } from 'react-hot-toast'
 
 
 
@@ -12,7 +12,7 @@ const App = () => {
 
   return <div>
     <Navbar />
-    <ToastContainer />
+    <Toaster />
     <div className='min-h-screen pt-4'>
       <ScrollToTop />
       <Outlet />

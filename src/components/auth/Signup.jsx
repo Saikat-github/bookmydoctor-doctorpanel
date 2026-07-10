@@ -1,10 +1,10 @@
 import { useState, useContext, useRef, useEffect } from 'react';
 import { useForm } from "react-hook-form";
-import axios from "axios";
-import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
-import ReCAPTCHA from "react-google-recaptcha";
 import { Loader2 } from 'lucide-react'
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import toast from "react-hot-toast";
+import ReCAPTCHA from "react-google-recaptcha";
 import GoogleLogo from "../../assets/google2.svg";
 import { DoctorContext } from "../../context/DoctorContext";
 
@@ -22,16 +22,19 @@ const Signup = ({ setState }) => {
     const recaptchaRef = useRef(null); // Ref to control reCAPTCHA
 
 
-    const handleSendOTP = async (data) => {
+    const handleSendOTP = async (e) => {
+        e.preventDefault();
         if (cooldown > 0) return toast.warn(`Please wait ${cooldown}s before resending`);
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            return toast.error("Please enter a valid email");
+        }
         try {
             setLoader(true);
-            const res = await axios.post(backendUrl + '/api/doctor/sendotp-signup', { email: data.email });
+            const res = await axios.post(backendUrl + '/api/doctor/sendotp-signup', { email });
             if (res.data.success) {
-                setEmail(data.email)
                 toast.success(res.data.message);
                 setShowOTPInput(true);
-                setCooldown(30); 
+                setCooldown(30);
             } else {
                 toast.error(res.data.message);
             }
@@ -118,23 +121,17 @@ const Signup = ({ setState }) => {
                             <span className="mx-2">Or</span>
                             <hr className="bg-gray-400 h-0.5 border-0 flex-grow" />
                         </div>
-                        <form onSubmit={handleSubmit(handleSendOTP)} className='text-sm space-y-4'>
+                        <form onSubmit={handleSendOTP} className='text-sm space-y-4'>
                             <input
                                 type="email"
+                                placeholder='Enter email to verify'
                                 className="border w-full px-4 py-1 border-slate-400 outline-primary"
-                                placeholder="Enter your email to verify"
-                                {...register("email", {
-                                    required: "Please enter your email",
-                                    pattern: {
-                                        value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                                        message: "Please enter a valid email address",
-                                    },
-                                })}
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
                             />
-                            {errors.email && (
-                                <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>
-                            )}
                             <button
+                                type='submit'
                                 disabled={loader}
                                 className={`text-center w-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-sm py-1 hover:bg-opacity-85 transition-all duration-300 ${loader && "bg-opacity-85"
                                     } flex justify-center items-center`}
@@ -175,7 +172,9 @@ const Signup = ({ setState }) => {
                                     }
                                     className="border w-full px-4 py-1 border-slate-400 outline-primary"
                                 />
-                                <p className='text-[10px] mt-1 text-slate-500'><span className='text-red-600'>*</span>Password must contain uppercase, lowercase, special character and number</p>
+                                <p className='text-[10px] mt-1 text-slate-500'>
+                                    <span className='text-red-600'>*</span>Password must contain uppercase, lowercase, special character and number
+                                </p>
                                 {errors.password && (
                                     <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>
                                 )}
@@ -202,12 +201,12 @@ const Signup = ({ setState }) => {
                         </form>
                         <button
                             disabled={cooldown > 0}
-                            onClick={() => setShowOTPInput(false)} className='text-indigo-700 hover:underline mt-2'>Resend OTP in {cooldown}s
+                            onClick={handleSendOTP} className='text-indigo-700 hover:underline mt-2'>Resend OTP in {cooldown}s
                         </button>
                     </>
 
             }
-            <p className='mt-2 text-indigo-700 cursor-pointer hover:underline' onClick={() => setState("Login")}>Back to Login</p>
+            <p className='mt-2 text-indigo-700 cursor-pointer hover:underline' onClick={() => setState("login")}>Back to Login</p>
         </div>
     )
 }
