@@ -11,12 +11,13 @@ const Navbar = () => {
 
 
     return (
-        <div className={`flex items-start justify-between px-2 sm:px-10 sm:py-6 py-4 border-b border-b-indigo-700 sticky top-0 bg-white z-50`}>
+        <div className={`flex items-start justify-between p-4 px-6 border-b border-b-indigo-700 sticky top-0 bg-white z-50`}>
             <div onClick={() => navigate("/")} className=''>
-                <div className='flex items-center justify-center gap-1 cursor-pointer'>
-                    <p className='sm:text-2xl sm:block bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text text-transparent'>
+                <div className='cursor-pointer text-xl sm:text-2xl sm:block bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text text-transparent'>
+                    <p>
                         bookmydoctor.
                     </p>
+                    <p className="text-xs">Doctor Panel</p>
                 </div>
             </div>
 
