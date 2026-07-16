@@ -1,6 +1,5 @@
 import { useContext, useRef, useState } from 'react';
 import { QRCodeSVG } from "qrcode.react";
-import { assets } from "../../assets/assets.js"
 import toast from "react-hot-toast";
 import { toPng } from 'html-to-image';
 import { DoctorContext } from '../../context/DoctorContext.jsx';
@@ -9,12 +8,12 @@ import { useCallback } from 'react';
 
 
 
-const DoctorQR = ({ title = "Scan & Book Appointment", logo = assets.bmdLogo, size = 200 }) => {
+const DoctorQR = ({ title = "Scan & Book Appointment", logo, size = 200 }) => {
     const [loader, setLoader] = useState(false);
     const { userPanelUrl, profileData } = useContext(DoctorContext);
 
     const componentRef = useRef(null);
-    const bookingUrl = `${userPanelUrl}/doctor/${profileData?._id}`
+    const bookingUrl = `${userPanelUrl}/doctor/${profileData?.docAuthId}`
 
     
     const downloadAsImage = useCallback(async () => {
@@ -64,10 +63,10 @@ const DoctorQR = ({ title = "Scan & Book Appointment", logo = assets.bmdLogo, si
 
     return (
         <div className='flex flex-col items-center justify-center gap-4 mt-6'>
-            <div className="flex flex-col items-center justify-center mx-10 p-4 bg-black" ref={componentRef}>
+            <div className="flex flex-col items-center justify-center mx-10 px-8 py-4 bg-black rounded-md" ref={componentRef}>
                 {/* Title above QR code */}
                 {title && (
-                    <h3 className="text-xl font-medium text-center text-white mb-4">
+                    <h3 className="text-lg font-medium text-center text-white mb-4">
                         {title}
                     </h3>
                 )}
@@ -80,7 +79,7 @@ const DoctorQR = ({ title = "Scan & Book Appointment", logo = assets.bmdLogo, si
                         level={"H"} // High error correction level to accommodate logo
                         includeMargin={true}
                         imageSettings={{
-                            src: logo,
+                            src: "/bookmeadr-logo-black.svg",
                             x: undefined, // Centered by default
                             y: undefined,
                             height: 40, // Adjust logo size
@@ -91,8 +90,10 @@ const DoctorQR = ({ title = "Scan & Book Appointment", logo = assets.bmdLogo, si
                 </div>
 
                 {/* Details below QR code */}
-                <h2 className='text-lg font-medium mt-2 text-white'>
+                <h2 className='text-lg font-medium mt-2 text-white text-center'>
                     Dr. {profileData?.personalInfo?.name}
+                    <br />
+                    <span className='text-sm'>bookmeadr.com</span>
                 </h2>
             </div>
 

@@ -6,7 +6,6 @@ const Footer = () => {
     const navigate = useNavigate();
 
 
-
     return (
         <div className='mt-48 py-10 border-t-indigo-700 border-t px-4 text-slate-800' id='footer'>
             <div className='flex justify-around flex-col sm:flex-row gap-4'>
@@ -26,10 +25,10 @@ const Footer = () => {
             <div className='mt-12 text-xs text-indigo-800 text-center flex flex-col justify-center gap-4'>
                 <div className='flex items-center justify-center gap-2'>
                     <p className='sm:text-2xl sm:block bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text text-transparent'>
-                        bookmydoctor.
+                        bookmeadr.
                     </p>
                 </div>
-                <p className=''>Copyright 2025 &copy;bookmydoctor. All Rights Reserved.</p>
+                <p className=''>Copyright 2025 &copy;bookmeadr. All Rights Reserved.</p>
             </div>
         </div>
     )

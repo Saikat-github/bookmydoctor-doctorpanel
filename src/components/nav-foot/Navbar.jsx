@@ -15,7 +15,7 @@ const Navbar = () => {
             <div onClick={() => navigate("/")} className=''>
                 <div className='cursor-pointer text-xl sm:text-2xl sm:block bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text text-transparent'>
                     <p>
-                        bookmydoctor.
+                        bookmeadr.
                     </p>
                     <p className="text-xs">Doctor Panel</p>
                 </div>
