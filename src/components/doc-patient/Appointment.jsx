@@ -1,17 +1,25 @@
-import React, { useRef } from "react";
-import { DownloadIcon } from 'lucide-react'
+import React, { useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import toast from "react-hot-toast";
+import { Search, Download, Phone, CalendarX2, X } from "lucide-react";
+import { converToJustDate } from "../../utils/ConverDate";
+import EmptyState from "./EmptyState";
 
 
 
-const Appointment = ({ appointment }) => {
-  const { allPatients, appointmentDate, totalSerialNumber } = appointment;
+const Appointment = ({ appointments }) => {
+  const [query, setQuery] = useState('')
+  const { allPatients, appointmentDate, totalSerialNumber } = appointments;
   const componentRef = useRef(null);
 
+  const q = query.trim().toLowerCase()
+  const filteredPatients = q
+    ? (allPatients || []).filter((p) => p.patientName.toLowerCase().includes(q) || p.phoneNumber.includes(q))
+    : allPatients
+
+  const isAbsent = new Date() > new Date(appointmentDate)
 
   const handlePrint = useReactToPrint({
-    // This is the correct prop name for current versions
     contentRef: componentRef,
     onPrintError: (error) => {
       toast.error("Printing failed. Please try again.");
@@ -22,60 +30,87 @@ const Appointment = ({ appointment }) => {
   });
 
 
-  const formattedDate = new Date(appointmentDate).toLocaleDateString("en-US", {
-    weekday: "long",
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-
 
   return (
-    <div className="max-w-md mx-auto bg-white shadow-lg shadow-slate-500 rounded-xl overflow-hidden my-5" ref={componentRef}>
-      <div className="px-6 py-4">
-        {/* Header Section */}
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg sm:text-xl font-semibold text-gray-800">
-            Total Appointments: {totalSerialNumber}
-          </h3>
-          <DownloadIcon
-            onClick={handlePrint}
-            aria-label="Print appointment details"
-            className="w-4 h-4 cursor-pointer hover:text-slate-950" />
-        </div>
-
-        {/* Appointment Date */}
-        <p className="text-gray-600 text-sm mb-4">
-          Appointment Date:{" "}
-          <span className="font-medium text-gray-800">
-            {formattedDate}
-          </span>
-        </p>
-
-        {/* Patients Section */}
+    <div ref={componentRef}>
+      {/* Header Section */}
+      <div className="flex flex-wrap items-center justify-between gap-3 p-5 border-b border-border">
         <div>
-          <h3 className="text-lg sm:text-xl font-semibold text-gray-800">Patients:</h3>
-          <ul className="space-y-2">
-            {allPatients.map((patient, index) => (
+          <p className="text-sm text-gray-600">Appointment date</p>
+          <p className="font-semibold text-gray-900 flex items-center gap-2">{converToJustDate(appointmentDate)}
+            <span className="w-6 h-6 flex items-center justify-center rounded-full text-sm font-semibold bg-indigo-50 text-indigo-700">
+              {totalSerialNumber}
+            </span>
+          </p>
+        </div>
+        <button
+          type="button"
+          className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-gray-600 hover:border-primary-300 hover:text-primary-700 transition-colors"
+          onClick={handlePrint}
+        >
+          <Download size={15} /> Export
+        </button>
+      </div>
+
+
+      {/* Search Bar */}
+      <div className="p-5 border-b relative">
+        <Search size={16} className="absolute left-8 top-1/2 -translate-y-1/2 text-gray-400" />
+        <input
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search by patient name or phone"
+          className="w-full rounded-lg border-2 bg-indigo-100/20 pl-9 pr-3 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-indigo-400 outline-none transition-colors"
+        />
+        {query && 
+        <X 
+        size={16} 
+        className="absolute right-8 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer"
+        onClick={() => setQuery("")}
+        />
+        }
+      </div>
+
+      {/* Patients Section */}
+      <ul className="space-y-2 p-5">
+        {
+          filteredPatients?.length > 0
+            ?
+            filteredPatients.map((patient, index) => (
               <li
                 key={index}
-                className="flex items-center justify-between bg-black/10 px-4 py-2 rounded"
+                className="flex gap-4 items-center justify-between border p-4 rounded-xl"
               >
-                <span className="text-sm font-medium text-gray-700">
-                  {patient.patientName || "Unknown Patient"} <br />
-                  Ph: {patient.phoneNumber || "N/A"} 
-                  <br />
-                  Serial: {patient.serialNumber}
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-indigo-50 text-sm font-semibold text-indigo-700">
+                  {patient.serialNumber}
                 </span>
 
-                <p className={`text-sm capitalize ${patient.status === "BOOKED" ? "text-slate-800" : "text-green-600"}`}>
-                  {patient.status}
+                <div className="min-w-0 flex-1">
+                  <p className="font-semibold text-gray-900 truncate">{patient.patientName}</p>
+                  <p className="flex items-center gap-1.5 text-sm text-gray-600 mt-0.5">
+                    <Phone size={13} /> {patient.phoneNumber}
+                  </p>
+                </div>
+
+                <p className={`text-xs capitalize font-semibold py-1 px-2 rounded-full ${patient.status === "verified" ? "bg-green-400/20 text-green-500" : (
+                  isAbsent
+                    ?
+                    "bg-red-400/20 text-red-500"
+                    : "bg-gray-400/20 text-gray-500"
+                )}`}>
+                  {patient.status === "verified" ? "Verified" : (isAbsent ? "Absent" : "Booked")}
                 </p>
               </li>
-            ))}
-          </ul>
-        </div>
-      </div>
+            ))
+            :
+            <EmptyState
+              icon={CalendarX2}
+              title='No matching patients'
+              description='Try a different name or phone number.'
+            />
+        }
+      </ul>
     </div>
   );
 };

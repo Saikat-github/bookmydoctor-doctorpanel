@@ -1,65 +1,39 @@
-import { FaMale, FaFemale, FaGenderless } from "react-icons/fa";
+import { ClipboardList, CheckCircle2, XCircle, ChevronDown } from 'lucide-react'
+import StatCard from './StatCard'
 
 
 const PatientStats = ({ stats }) => {
+  const {totalPatients, verifiedPatients, nonVerifiedPatients, genderCount } = stats || {}
+  
   
   return (
-    <div className="flex flex-wrap gap-4 sm:gap-10 max-sm:text-sm">
-      <div className="bg-gradient-to-r from-slate-700 to-slate-500 text-slate-700 shadow-2xl p-4 rounded flex flex-col sm:flex-row sm:justify-between gap-4 w-full">
-        <div className="flex items-center gap-6 bg-white p-4 rounded">
-          <div>
-            <div className="text-blue-500 w-8 h-8 mr-3">📋</div>
-            <p className="">Total Patients</p>
-          </div>
-          <h2 className="text-xl font-bold">{stats.totalPatients}</h2>
+    <div className="">
+       <section className="mb-8">
+        <h2 className="text-sm font-semibold text-gray-600 uppercase tracking-wide mb-3">Attendance</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <StatCard icon={ClipboardList} label="Total Patients" value={totalPatients} tone="neutral"/>
+          <StatCard icon={CheckCircle2} label="Attended" value={verifiedPatients} tone="success"/>
+          <StatCard icon={XCircle} label="Non-attended" value={nonVerifiedPatients} tone="danger" />
         </div>
+      </section>
 
-        <div className="flex items-center gap-6 bg-white p-4 rounded">
-          <div className=''>
-            <div className="text-red-500 w-8 h-8 mr-3">✔️</div>
-            <p className="">Attended Patients</p>
+      <section>
+        <h2 className="text-sm font-semibold text-gray-600 uppercase tracking-wide mb-3">Demographics</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="rounded-2xl border p-5 bg-white">
+            <p className="text-2xl font-extrabold text-gray-900">{genderCount?.male}</p>
+            <p className="text-sm text-gray-600 mt-1">Male</p>
           </div>
-          <h2 className="text-xl font-bold">{stats.verifiedPatients}</h2>
-        </div>
-
-        <div className="flex items-center gap-6 bg-white p-4 rounded">
-          <div className=''>
-            <div className="text-red-500 w-8 h-8 mr-3">❌</div>
-            <p className="">Non-attended Patients</p>
+          <div className="rounded-2xl border p-5 bg-white">
+            <p className="text-2xl font-extrabold text-gray-900">{genderCount?.female}</p>
+            <p className="text-sm text-gray-600 mt-1">Female</p>
           </div>
-          <h2 className="text-xl font-bold">{stats.nonVerifiedPatients}</h2>
-        </div>
-
-      </div>
-
-      <div className="bg-gradient-to-r from-slate-700 to-slate-500 text-slate-700 shadow-2xl p-4 rounded flex flex-col sm:flex-row sm:justify-between gap-4 w-full">
-        {/* Male Stats */}
-        <div className="flex items-center gap-6 bg-white p-4 rounded">
-          <div className="w-1/2">
-            <FaMale className="text-blue-500 text-3xl" />
-            <p className="text-sm uppercase">Male</p>
+          <div className="rounded-2xl border p-5 bg-white">
+            <p className="text-2xl font-extrabold text-gray-900">{genderCount?.other}</p>
+            <p className="text-sm text-gray-600 mt-1">Others</p>
           </div>
-          <h2 className="text-2xl font-bold">{stats.genderCount?.male}</h2>
         </div>
-
-        {/* Female Stats */}
-        <div className="flex items-center gap-6 bg-white p-4 rounded">
-          <div className="w-1/2">
-            <FaFemale className="text-pink-400 text-3xl" />
-            <p className="text-sm uppercase text-slate-700">Female</p>
-          </div>
-          <h2 className="text-2xl font-bold">{stats.genderCount?.female}</h2>
-        </div>
-
-        {/* Other Stats */}
-        <div className="flex items-center gap-6 bg-white p-4 rounded">
-          <div className="w-1/2">
-            <FaGenderless className="text-yellow-400 text-3xl" />
-            <p className="text-sm uppercase text-slate-700">Others</p>
-          </div>
-          <h2 className="text-2xl font-bold">{stats.genderCount?.other}</h2>
-        </div>
-      </div>
+      </section>
     </div>
   )
 }

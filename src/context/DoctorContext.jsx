@@ -2,6 +2,8 @@ import { createContext, useState } from 'react'
 import axios from 'axios';
 import toast from "react-hot-toast";
 import { useEffect } from 'react';
+import { get } from 'react-hook-form';
+import { getStartEndDate } from '../utils/ConverDate';
 
 
 
@@ -17,7 +19,8 @@ const DoctorContextProvider = ({ children }) => {
     const [profileData, setProfileData] = useState(null);
     const [selectedDays, setSelectedDays] = useState([]);
     const [timeSlotsByDay, setTimeSlotsByDay] = useState([]);
-    const [appointment, setAppointment] = useState(null);
+    const [appointments, setAppointments] = useState(null);
+    const [stats, setStats] = useState(null)
 
 
 
@@ -38,17 +41,43 @@ const DoctorContextProvider = ({ children }) => {
     }
 
 
+    const getPatientStats = async (filter="today") => {
+        const { startDate, endDate } = getStartEndDate(filter)
+        if (!startDate <= endDate) {
+            toast.error("Start date should be less than end date");
+            return;
+        }
+        try {
+            const res = await axios.get(backendUrl + "/api/doctor/patient-stats", {
+                params: {
+                    startDate,
+                    endDate,
+                },
+                withCredentials: true,
+            })
+            if (res.data.success) {
+                setStats(res.data.stats || {})
+            } else {
+                toast.error(res.data.message);
+            }
+        } catch (error) {
+            console.log(error);
+            toast.error("Something went wrong");
+        }
+    };
+
+
     const checkAuthStatus = async () => {
         try {
             const response = await axios.get(backendUrl + '/api/doctor/current_user', {
                 withCredentials: true
             });
             if (response.data.success) {
-                console.log(response.data);
-                
-                // User is logged in
                 setCurrentDoc(true)
-                await getProfileData()
+                await Promise.allSettled([
+                    getProfileData(),
+                    getPatientStats()
+                ]);
                 return true;
             } else {
                 setCurrentDoc(false);
@@ -95,26 +124,28 @@ const DoctorContextProvider = ({ children }) => {
 
 
 
-    const value = { 
-        backendUrl, 
-        currentDoc, 
-        setCurrentDoc, 
-        loader, 
-        setLoader, 
-        profileData, 
-        setProfileData, 
-        getProfileData, 
-        checkAuthStatus, 
-        selectedDays, 
-        setSelectedDays, 
-        timeSlotsByDay, 
-        setTimeSlotsByDay, 
-        appointment, 
-        setAppointment, 
-        userPanelUrl, 
-        getNext7Days, 
+    const value = {
+        backendUrl,
+        currentDoc,
+        setCurrentDoc,
+        loader,
+        setLoader,
+        profileData,
+        setProfileData,
+        getProfileData,
+        checkAuthStatus,
+        selectedDays,
+        setSelectedDays,
+        timeSlotsByDay,
+        setTimeSlotsByDay,
+        appointments,
+        setAppointments,
+        userPanelUrl,
+        getNext7Days,
         recaptchaSiteKey,
-        isAuthenticated: currentDoc
+        isAuthenticated: currentDoc,
+        stats,
+        getPatientStats
     };
 
 

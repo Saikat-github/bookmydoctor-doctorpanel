@@ -1,31 +1,31 @@
-import { useContext } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { DoctorContext } from '../../context/DoctorContext'
-import { useForm } from 'react-hook-form'
 import toast from "react-hot-toast";
-import { Appointment } from '../../components';
-import { useState } from 'react';
+import { Appointment, DateChip, EmptyState } from '../../components';
 import axios from 'axios';
+import { CalendarX2, Loader2 } from 'lucide-react';
 
 
 
 const DoctorAppointments = () => {
-  const { register, handleSubmit } = useForm()
+  const { backendUrl, appointments, setAppointments, profileData, getNext7Days } = useContext(DoctorContext);
+  const nearestDate = getNext7Days(Object.keys(profileData?.availability?.workingDays))[0]?.date || null;
+
+  const [selectedDate, setSelectedDate] = useState(nearestDate)
   const [loader, setLoader] = useState(false);
-  const { backendUrl, appointment, setAppointment, profileData, getNext7Days } = useContext(DoctorContext);
 
-
-  const getAppointments = async (data) => {
+  const getAppointments = async () => {
     if (!profileData) {
       return toast.info("Please complete your profile on profile page")
     }
     try {
       setLoader(true);
       const res = await axios.get(`${backendUrl}/api/doctor/get-appointments`, {
-        params: { date: data.date },
+        params: { date : selectedDate },
         withCredentials: true
       });
       if (res.data.success) {
-        setAppointment(res.data.appointment);
+        setAppointments(res.data.appointment || null);
       } else {
         toast.error(res.data.message);
       }
@@ -38,49 +38,56 @@ const DoctorAppointments = () => {
   }
 
 
+  useEffect(() => {
+    if (selectedDate) {
+      getAppointments();
+    }
+  }, [selectedDate])
+
+
 
 
   return (
-    <div className='w-full text-slate-800 space-y-2'>
-      <div className="p-3 flex flex-col justify-center items-center border-b border-slate-400">
-        <h2 className="text-lg sm:text-xl font-semibold text-gray-700 mb-2">Appointment Dates for Next 7 days</h2>
-        <ul className="text-gray-900 text-xs space-y-1">
-          {getNext7Days(Object.keys(profileData?.availability?.workingDays)).map((day) => (
-            <li key={day.date} value={day.date}>
-              • {day.display}
-            </li>
-          ))}
-        </ul>
+    <div className='max-w-2xl mx-auto px-4 sm:px-6 py-10'>
+      <h1 className="text-xl font-bold text-gray-900 mb-1">Appointments</h1>
+      <p className="text-sm text-gray-600 mb-5">Tap a date to jump straight to that day's list.</p>
+      <div className="flex flex-wrap gap-2 mb-6">
+        {getNext7Days(Object.keys(profileData?.availability?.workingDays)).map(({ date, display }) => (
+          <DateChip
+            key={date}
+            date={date}
+            active={date === selectedDate}
+            onClick={() => setSelectedDate(date)}
+          />
+        ))}
+        <form className="text-sm sm:text-lg flex flex-col sm:flex-row items-center gap-2 sm:gap-4 justify-center">
+          <input
+            type="date"
+            id="appointment-date"
+            className="border border-gray-300 rounded-full py-2 px-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-slate-400 transition-all duration-300 shadow-sm text-sm"
+            onChange={(e) => setSelectedDate(e.target.value)}
+            required
+          />
+        </form>
       </div>
 
-      <form onSubmit={handleSubmit(getAppointments)} className="text-sm sm:text-lg flex flex-col sm:flex-row items-center gap-2 sm:gap-4 justify-center">
-        <label
-          htmlFor="appointment-date"
-          className="text-lg sm:text-xl font-semibold text-slate-700"
-        >
-          Please Select a Date
-        </label>
-        <input
-          type="date"
-          id="appointment-date"
-          className="border-2 border-gray-300 rounded py-2 px-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-slate-400 transition-all duration-300 shadow-sm"
-          {...register("date", { required: true })}
-          required
-        />
-        <button
-          disabled={loader}
-          type='submit'
-          className={` px-5 py-3 rounded bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold shadow-lg hover:from-indigo-600 hover:to-purple-700 duration-300 hover:shadow-xl transition-all duration-300"}`}
-        >
-          {loader ? "Loading..." : "Get Appointments"}
-        </button>
-      </form>
-
-      <div>
+      <div className='rounded-2xl border bg-white overflow-hidden'>
         {
-          appointment
-          &&
-          <Appointment appointment={appointment} />
+          appointments && !loader
+            ?
+            <Appointment appointments={appointments} />
+            :
+            (
+              loader
+                ?
+                <Loader2 className="animate-spin mx-auto my-4 text-gray-600 w-5" />
+                :
+                <EmptyState
+                  icon={CalendarX2}
+                  title='No appointments on this date'
+                  description='Nothing booked for this day yet.'
+                />
+            )
         }
       </div>
     </div>

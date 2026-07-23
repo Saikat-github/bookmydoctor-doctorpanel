@@ -14,7 +14,6 @@ import ProfileCard from "./doc-profile/ProfileCard";
 import ProfileDetails from "./doc-profile/ProfileDetails";
 
 import Navbar from "./nav-foot/Navbar";
-import Sidebar from "./nav-foot/Sidebar";
 import Footer from "./nav-foot/Footer";
 
 import PlansComponent from "./payment/PlansComponent";
@@ -30,9 +29,11 @@ import ConfirmationModal from "./utils/ConfirmationModal";
 import ProtectedDocRoute from "./utils/ProtectedDocRoute";
 import ScrollToTop from "./utils/ScrollToTop";
 
+import ActionCard from "./home/ActionCard";
+import DateChip from "./doc-patient/DateChip";
+import EmptyState from "./doc-patient/EmptyState";
 
-
-
+import QrScanBar from "./nav-foot/QrScanBar";
 
 
 
@@ -51,7 +52,6 @@ export {
     ProfileDetails,
     Navbar,
     Footer,
-    Sidebar,
     PlansComponent,
     SubscriptionStat,
     Form,
@@ -62,4 +62,8 @@ export {
     ConfirmationModal,
     ProtectedDocRoute,
     ScrollToTop,
+    ActionCard,
+    DateChip, 
+    EmptyState,
+    QrScanBar
 };

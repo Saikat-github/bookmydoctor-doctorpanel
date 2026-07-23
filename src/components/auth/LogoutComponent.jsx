@@ -3,7 +3,7 @@ import axios from 'axios';
 import toast from "react-hot-toast";
 import { useContext, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { User, Gem, CreditCard, LogOut } from 'lucide-react';
+import { User, Gem, CreditCard, LogOut, Loader2 } from 'lucide-react';
 
 
 
@@ -34,62 +34,29 @@ const LogoutComponent = ({ setIsMobileMenuOpen }) => {
 
 
   return (
-    <div className={`absolute top-12 right-2  bg-white shadow-md shadow-slate-500 text-white rounded py-4 px-6 z-10 transition-opacity duration-200 ease-in-out`}>
-      {currentDoc
-        ?
-        <div className="space-y-4 text-slate-800">
-          <Link
-            to={"/doctor-profile"}
-            onClick={() => setIsMobileMenuOpen(false)}
-            className="flex text-xs md:text-sm items-center gap-2 cursor-pointer transition-all duration-200 opacity-90 hover:opacity-100"
-          >
-            <User className="w-5 h-5 text-indigo-600" />
-            <p>Profile</p>
-          </Link>
-
-          <Link
-            to={"/subscription-details"}
-            onClick={() => setIsMobileMenuOpen(false)}
-            className="flex text-xs md:text-sm items-center gap-2 cursor-pointer transition-all duration-200 opacity-90 hover:opacity-100"
-          >
-            <Gem className="w-5 h-5 text-indigo-600" />
-            <p>Subscription</p>
-          </Link>
-
-          <Link
-            to={"/payments"}
-            onClick={() => setIsMobileMenuOpen(false)}
-            className="flex text-xs md:text-sm items-center gap-2 cursor-pointer transition-all duration-200 opacity-90 hover:opacity-100"
-          >
-            <CreditCard className="w-5 h-5 text-indigo-600" />
-            <p>Payments</p>
-          </Link>
-
-          <button
-            disabled={loader}
-            className="flex text-xs md:text-sm items-center gap-2 cursor-pointer transition-all duration-200 opacity-90 hover:opacity-100 text-red-600"
-            onClick={logout}
-          >
-            {loader ? (
-              <div className="w-4 h-4 rounded-full border-dashed mx-4 border-2 border-red-600 animate-spin"></div>
-            ) : (
-              <>
-                <LogOut className="w-5 h-5 text-red-500" />
-                Logout
-              </>
-            )}
-          </button>
-        </div>
-
-        :
-        <Link
-          to={"/login"}
-          onClick={() => setIsMobileMenuOpen(false)}
-          className='flex text-sm md:text-sm items-center gap-2 cursor-pointer transition-all duration-200 opacity-90 hover:opacity-100 text-indigo-700'>
-          <LogOut className="w-5 h-5" />
-          Login
-        </Link>}
-    </div>
+    currentDoc
+      ?
+      <button
+        disabled={loader}
+        className="cursor-pointer transition-all duration-200 text-red-600 px-3 py-2 max-lg:w-full hover:bg-indigo-50"
+        onClick={logout}
+      >
+        {loader
+          ?
+          <Loader2 className='w-5 animate-spin text-gray-500 mx-auto' />
+          :
+          <LogOut size={18} strokeWidth={2} />
+        }
+      </button>
+      :
+      <Link
+        to={"/login"}
+        onClick={() => setIsMobileMenuOpen(false)}
+        className='flex items-center gap-1 bg-indigo-500 px-6 py-3 rounded-full text-white'
+        >
+        <LogOut className="w-5 h-5" />
+        Login
+      </Link>
   )
 }
 

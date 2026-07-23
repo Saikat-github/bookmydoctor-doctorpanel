@@ -4,7 +4,7 @@ import './index.css'
 import App from './App.jsx'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import DoctorContextProvider from './context/DoctorContext.jsx'
-import { DoctorAppointments, DoctorDashboard, DoctorProfile, LoginPage, ForgetPassword, DoctorQR, Subscription, Payments, NotFound, Plans, QRScanner } from './pages/index.js'
+import { DoctorAppointments, DoctorDashboard, DoctorProfile, LoginPage, ForgetPassword, DoctorQR, Subscription, Payments, NotFound, Plans, QRScanner, DoctorStats, Contact } from './pages/index.js'
 import Home from './pages/Home.jsx'
 import ProtectedDocRoute from './components/utils/ProtectedDocRoute.jsx'
 
@@ -23,50 +23,50 @@ const router = createBrowserRouter([
         </ProtectedDocRoute>
       },
       {
-        path: "/doctor-dashboard",
+        path: "/doc-stats",
         element: <ProtectedDocRoute>
-          <DoctorDashboard />
+          <DoctorStats />
         </ProtectedDocRoute>
       },
       {
-        path: "/doctor-appointments",
+        path: "/doc-appointments",
         element: <ProtectedDocRoute>
           <DoctorAppointments />
         </ProtectedDocRoute>
       },
 
       {
-        path: "/doctor-profile",
+        path: "/doc-profile",
         element: <ProtectedDocRoute>
           <DoctorProfile />
         </ProtectedDocRoute>
       },
       {
-        path: "/qrscanner",
+        path: "/doc-qrscanner",
         element: <ProtectedDocRoute>
           <QRScanner />
         </ProtectedDocRoute>
       },
       {
-        path: "/qr-download",
+        path: "/doc-qrdownload",
         element: <ProtectedDocRoute>
           <DoctorQR />
         </ProtectedDocRoute>
       },
       {
-        path: "/subscription-details",
+        path: "/doc-subscription",
         element: <ProtectedDocRoute>
           <Subscription />
         </ProtectedDocRoute>
       },
       {
-        path: "/payments",
+        path: "/doc-payments",
         element: <ProtectedDocRoute>
           <Payments />
         </ProtectedDocRoute>
       },
       {
-        path: "/checkout",
+        path: "/doc-checkout",
         element: <ProtectedDocRoute>
           <Plans />
         </ProtectedDocRoute>
@@ -80,6 +80,10 @@ const router = createBrowserRouter([
       {
         path: "/login",
         element: <LoginPage />
+      },
+      {
+        path: "/doc-support",
+        element: <Contact />
       },
       {
         path: "*",

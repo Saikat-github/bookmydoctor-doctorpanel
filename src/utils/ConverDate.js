@@ -12,12 +12,18 @@ const converDate = (date) => {
 
 const converToJustDate = (date) => {
   const newDate = new Date(date);
-  const formattedDate = newDate.toLocaleString('en-GB', {
+  const formattedDate = newDate.toLocaleString('en-US', {
+    weekday: 'short',
+    month: 'short',   // e.g., "June"
     day: 'numeric',  // e.g., "16"
-    month: 'long',   // e.g., "June"
     year: 'numeric', // e.g., "2025"
   })
   return formattedDate
+}
+
+const convertToDateShort = (dateStr) => {
+  const d = new Date(dateStr)
+  return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
 }
 
 
@@ -86,4 +92,4 @@ const getStartEndDate = (filter) => {
 
 
 
-export { converDate, converToJustDate, getStartEndDate };
+export { converDate, converToJustDate, getStartEndDate, convertToDateShort };

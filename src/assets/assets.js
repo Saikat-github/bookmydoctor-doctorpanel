@@ -23,6 +23,7 @@ import diamond from './gem-regular.svg'
 import dollar from './dollar-sign-solid.svg'
 import creditCard from './credit-card-solid.svg'
 import bmdLogo from "./bmdlogo-2.png"
+import contact_image from "./contact_image.png"
 
 
 
@@ -51,7 +52,8 @@ export const assets = {
     diamond,
     dollar,
     creditCard,
-    bmdLogo
+    bmdLogo,
+    contact_image
 }
 
 

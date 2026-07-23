@@ -1,29 +1,37 @@
-import { useNavigate } from 'react-router-dom'
-import { CalendarCheck, BarChart3, Headset } from 'lucide-react';
+import { CalendarCheck, BarChart3, Headphones, ChevronRight } from 'lucide-react'
+import { ActionCard } from '../components';
 
 
 
 const Home = () => {
-
-  const navigate = useNavigate();
   return (
-    <div>
-        <div className="flex p-4 justify-center flex-col items-center my-10 gap-10">
-          <button onClick={() => navigate("/doctor-appointments")} className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold shadow-lg hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 hover:scale-110">
-            <CalendarCheck className="w-10 h-10" />
-            See Appointments
-          </button>
+    <div className="max-w-2xl mx-auto px-4 sm:px-6 py-12">
+      <div className="mb-8 text-center">
+        <h1 className="text-2xl font-extrabold text-gray-900">Welcome back, Doctor</h1>
+        <p className="text-gray-600 mt-1">What would you like to do?</p>
+      </div>
 
-          <button onClick={() => navigate("/doctor-dashboard")} className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-semibold shadow-lg hover:from-emerald-600 hover:to-teal-700 transition-all duration-300 hover:scale-110">
-            <BarChart3 className="w-10 h-10" />
-            See Patients Stats
-          </button>
-
-          <a href='#footer' className="flex items-center gap-4 px-6 py-3 rounded-2xl bg-gradient-to-r from-pink-500 to-rose-600 text-white font-semibold shadow-lg hover:from-pink-600 hover:to-rose-700 transition-all duration-300 hover:scale-110">
-            <Headset className="w-10 h-10" />
-            Contact Support
-          </a>
-        </div>
+      <div className="flex flex-col gap-3">
+        <ActionCard
+          to="/doc-appointments"
+          icon={CalendarCheck}
+          title="See Appointments"
+          description="Today's schedule and upcoming bookings"
+          primary={true}
+        />
+        <ActionCard
+          to="/doc-stats"
+          icon={BarChart3}
+          title="See Patient Stats"
+          description="Attendance and patient demographics"
+        />
+        <ActionCard
+          to="/doc-support"
+          icon={Headphones}
+          title="Contact Support"
+          description="Get help with your account or bookings"
+        />
+      </div>
     </div>
   )
 }
